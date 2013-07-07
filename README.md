@@ -1,10 +1,18 @@
-# json-edit
+# Exploring core.async in Clojurescript
 
-A Clojure library designed to ... well, that part is up to you.
+Exploring what it means ot have blocking calls in the browser.
 
-## Usage
+## Build and view in browser
 
-FIXME
+Build it
+    lein cljsbuild once
+
+View the file ./resources/public/demo.html in your browser.
+
+## Items of note
+
+* Can code state without atoms.
+* You can have fine grained control over the state of the application.
 
 ## License
 
