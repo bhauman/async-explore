@@ -29,14 +29,14 @@
      [:input {:type "submit" :value "Save" :class "btn btn-primary"}]
      [:a {:href "#" :class " cancel-new-list btn"} "cancel"]]]])
 
-(defn list-item-view [[task-id task] focused-list]
-  [:li (if (= focused-list task-id) {:class "active"} {})
-   [:a {:href "#"} (:name task)]])
+(defn list-item-view [[list-id list] focused-list]
+  [:li (if (= focused-list list-id) {:class "active"} {})
+   [:a {:href "#" :data-list-id (name list-id)} (:name list)]])
 
 (defn list-nav-view [state]
   (let [focused-list (:focused-list state)
         lists (get-in state [:data :todo-lists])]
-    [:ul {:class "nav nav-pills"} (map list-item-view lists (repeat focused-list))]
+    [:ul {:class "nav nav-pills list-nav"} (map list-item-view lists (repeat focused-list))]
     ))
 
 (defn new-task-form [form-state]
@@ -49,13 +49,20 @@
                            :placeholder "New Task"}]])
 
 (defn task-item-view [[task-id task]]
-  [:li {:data-task-id task-id} (task :content)])
+  [:li (if (:completed task) {:class "completed"} {})
+   [:a.delete-task   {:href "#" :data-task-id (name task-id)} [:i.icon-remove]]
+   (if (:completed task)
+     [:span.spacer " "]
+     [:a.complete-task {:href "#" :data-task-id (name task-id)} [:i.icon-ok]]) 
+   [:span.content (str " " (task :content))]])
 
 (defn focused-list-view [state]
   (let [focused-list-id (:focused-list state)
         focused-list (get-in state [:data :todo-lists focused-list-id])]
     [:div.focused-list
-     [:h3 (:name focused-list)]
+     [:h3 (:name focused-list)
+      [:a.delete-list {:href "#" :data-list-id (name focused-list-id)}
+       [:i {:class "icon-trash"}]]]
      [:ul {:class "unstyled"}
       (map task-item-view (:tasks focused-list))]
      (if (> (-> state :data :todo-lists count) 0)
@@ -74,6 +81,6 @@
    (nav-bar)
    (if (= (state :mode) :add-list)
      (new-list-form (state :new-list-form))
-     (list-and-nav-view state)
+     (if (pos? (count (-> state :data :todo-lists))) (list-and-nav-view state))
      )])
 

@@ -9,11 +9,14 @@
    [todos-first.templates :refer [app-view]])
   (:require-macros [cljs.core.async.macros :as m :refer [go alt!]]))
 
-
 (def dlog (comp log prn-str))
 
 (defn click-chan [input-chan selector ev-name]
-  (on ($ "body") :click selector {} (fn [e] (jq/prevent e) (put! input-chan [ev-name]))))
+  (on ($ "body") :click selector {}
+      (fn [e] (jq/prevent e)
+        (let [data (-> e .-currentTarget $ .data
+                       (js->clj :keywordize-keys true))]
+          (put! input-chan [ev-name data])))))
 
 (defn fields-value-map [form-selector fields]
   (into {} (map
@@ -32,8 +35,8 @@
         (let [res (<! channel)]
           (if (pred res) res (recur))))))
 
-(defn filter-events [name channel]
-  (let [name-set (if (set? name) name #{name})]
+(defn filter-events [name-set channel]
+  (let [name-set (if (set? name-set) name-set #{name-set})]
     (filter-chan #(and (pos? (count %)) (name-set (first %)))
                  channel)))
 
@@ -51,7 +54,15 @@
     [[:content "can't be blank"]]
     []))
 
-(defn do-add-list-form [input-chan state]
+(defn add-list [{:keys [data] :as state} list-name]
+  (let [new-sym (-> "todo-list-" gensym name keyword)
+        new-data (assoc-in data [:todo-lists new-sym]
+                           {:name list-name :tasks {}})]
+    (assoc state
+      :data new-data
+      :focused-list new-sym)))
+
+(defn add-list-form-app [input-chan state]
   (go
    (loop [form-state (assoc state
                        :mode :add-list
@@ -64,34 +75,54 @@
          state
          (let [errors (validate-edit-form form-result)]
            (if (pos? (count errors))
-             (recur (-> form-state (assoc-in [:new-list-form :name]
-                                             (form-result :name))
-                        (assoc-in [:new-list-form :errors] errors)))
-             (let [data (state :data)
-                   new-sym (-> "todo-list" gensym name keyword)
-                   new-data (assoc-in data [:todo-lists new-sym]
-                                      {:name (form-result :name)
-                                       :tasks {}})]
-               (assoc state
-                 :data new-data
-                 :focused-list new-sym))                                      
-             )))))))
+             (recur (assoc form-state :new-list-form {:name (form-result :name)
+                                                      :errors errors}))
+             (add-list state (form-result :name)))))))))
+
+(defn add-task [{:keys [focused-list] :as state} content]
+  (let [new-task-id (-> "task" gensym name keyword)
+        new-data (assoc-in (state :data) [:todo-lists
+                                          focused-list
+                                          :tasks
+                                          new-task-id
+                                          :content]
+                           content)]
+    (assoc state :data new-data)))
 
 (defn do-add-task [state form-vals]
   (let [errors (validate-task-form form-vals)]
     (if (pos? (count errors))
       (assoc state :new-task-form { :content (:content form-vals)
                                     :errors  errors })
-      (let [focused-list-id (state :focused-list)
-            new-task-id (-> "task" gensym name keyword)
-            new-data (assoc-in (state :data) [:todo-lists
-                                              focused-list-id
-                                              :tasks
-                                              new-task-id]
-                               { :content (form-vals :content)})]
-        (assoc state :data new-data :new-task-form {}))
-      )
-    ))
+      (-> state
+          (add-task (:content form-vals))
+          (dissoc :new-task-form)))))
+
+(defn select-list [state {:keys [listId]}]
+  (assoc state :focused-list (keyword listId)))
+
+(defn delete-task [{:keys [data] :as state} {:keys [taskId]}]
+  (assoc state :data
+         (update-in data
+                    [:todo-lists
+                     (:focused-list state)
+                     :tasks] dissoc (keyword taskId))))
+
+(defn complete-task [{:keys [data] :as state} {:keys [taskId]}]
+  (assoc state :data
+         (assoc-in data
+                   [:todo-lists
+                    (:focused-list state)
+                    :tasks
+                    (keyword taskId)
+                    :completed] true )))
+
+(defn delete-list [{:keys [data] :as state} {:keys [listId]}]
+  (let [updated-data (update-in data
+                                [:todo-lists] dissoc (:focused-list state))]
+    (assoc state
+      :data updated-data
+      :focused-list (-> updated-data :todo-lists first first))))
 
 (defn app-loop [start-state]
   (let [input-chan (chan)]
@@ -99,14 +130,22 @@
     (form-submit-chan input-chan ".new-list-form" :new-list-form-submit [:name])
     (click-chan       input-chan ".cancel-new-list" :cancel-new-list-form)
     (form-submit-chan input-chan ".new-task-form" :new-task-form-submit [:content])
+    (click-chan       input-chan ".list-nav a"   :select-list)
+    (click-chan       input-chan "a.delete-list" :delete-list)    
+    (click-chan       input-chan "a.delete-task" :delete-task)
+    (click-chan       input-chan "a.complete-task" :complete-task)    
     (go
      (loop [state start-state]
-       (log "loop top" (prn-str state))
+       (log "loop top " (prn-str state))
        (render-page state)
-       (let [event (<! input-chan)]
-         (condp = (first event)
-           :get-new-list (recur (<! (do-add-list-form input-chan state)))
-           :new-task-form-submit (recur (do-add-task state (last event)))
+       (let [[ev-name ev-data] (<! input-chan)]
+         (condp = ev-name
+           :get-new-list (recur (<! (add-list-form-app input-chan state)))
+           :new-task-form-submit (recur (do-add-task state ev-data))
+           :select-list (recur (select-list state ev-data))
+           :delete-list (recur (delete-list state ev-data))           
+           :delete-task (recur (delete-task state ev-data))
+           :complete-task (recur (complete-task state ev-data))           
            (recur state)
           ))))))
 
@@ -114,4 +153,3 @@
   (app-loop {}))
 
 (setup-page)
-

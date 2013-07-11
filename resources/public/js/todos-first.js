@@ -17787,11 +17787,11 @@ todos_first.templates.new_list_form = function(a) {
 };
 todos_first.templates.list_item_view = function(a, b) {
   var c = cljs.core.nth.call(null, a, 0, null), d = cljs.core.nth.call(null, a, 1, null);
-  return cljs.core.PersistentVector.fromArray(["\ufdd0:li", cljs.core._EQ_.call(null, b, c) ? cljs.core.PersistentArrayMap.fromArray(["\ufdd0:class", "active"], !0) : cljs.core.ObjMap.EMPTY, cljs.core.PersistentVector.fromArray(["\ufdd0:a", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:href", "#"], !0), (new cljs.core.Keyword("\ufdd0:name")).call(null, d)], !0)], !0)
+  return cljs.core.PersistentVector.fromArray(["\ufdd0:li", cljs.core._EQ_.call(null, b, c) ? cljs.core.PersistentArrayMap.fromArray(["\ufdd0:class", "active"], !0) : cljs.core.ObjMap.EMPTY, cljs.core.PersistentVector.fromArray(["\ufdd0:a", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:href", "#", "\ufdd0:data-list-id", cljs.core.name.call(null, c)], !0), (new cljs.core.Keyword("\ufdd0:name")).call(null, d)], !0)], !0)
 };
 todos_first.templates.list_nav_view = function(a) {
   var b = (new cljs.core.Keyword("\ufdd0:focused-list")).call(null, a), a = cljs.core.get_in.call(null, a, cljs.core.PersistentVector.fromArray(["\ufdd0:data", "\ufdd0:todo-lists"], !0));
-  return cljs.core.PersistentVector.fromArray(["\ufdd0:ul", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:class", "nav nav-pills"], !0), cljs.core.map.call(null, todos_first.templates.list_item_view, a, cljs.core.repeat.call(null, b))], !0)
+  return cljs.core.PersistentVector.fromArray(["\ufdd0:ul", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:class", "nav nav-pills list-nav"], !0), cljs.core.map.call(null, todos_first.templates.list_item_view, a, cljs.core.repeat.call(null, b))], !0)
 };
 todos_first.templates.new_task_form = function(a) {
   return cljs.core.PersistentVector.fromArray(["\ufdd0:form.new-task-form", 0 < cljs.core.count.call(null, (new cljs.core.Keyword("\ufdd0:errors")).call(null, a)) ? todos_first.templates.form_errors_view.call(null, (new cljs.core.Keyword("\ufdd0:errors")).call(null, a)) : null, cljs.core.PersistentVector.fromArray(["\ufdd0:input.new-task-name", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:type", "text", "\ufdd0:value", (new cljs.core.Keyword("\ufdd0:content")).call(null, a), "\ufdd0:name", "content", 
@@ -17799,25 +17799,28 @@ todos_first.templates.new_task_form = function(a) {
 };
 todos_first.templates.task_item_view = function(a) {
   var b = cljs.core.nth.call(null, a, 0, null), a = cljs.core.nth.call(null, a, 1, null);
-  return cljs.core.PersistentVector.fromArray(["\ufdd0:li", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:data-task-id", b], !0), a.call(null, "\ufdd0:content")], !0)
+  return cljs.core.PersistentVector.fromArray(["\ufdd0:li", cljs.core.truth_((new cljs.core.Keyword("\ufdd0:completed")).call(null, a)) ? cljs.core.PersistentArrayMap.fromArray(["\ufdd0:class", "completed"], !0) : cljs.core.ObjMap.EMPTY, cljs.core.PersistentVector.fromArray(["\ufdd0:a.delete-task", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:href", "#", "\ufdd0:data-task-id", cljs.core.name.call(null, b)], !0), cljs.core.PersistentVector.fromArray(["\ufdd0:i.icon-remove"], !0)], !0), cljs.core.truth_((new cljs.core.Keyword("\ufdd0:completed")).call(null, 
+  a)) ? cljs.core.PersistentVector.fromArray(["\ufdd0:span.spacer", " "], !0) : cljs.core.PersistentVector.fromArray(["\ufdd0:a.complete-task", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:href", "#", "\ufdd0:data-task-id", cljs.core.name.call(null, b)], !0), cljs.core.PersistentVector.fromArray(["\ufdd0:i.icon-ok"], !0)], !0), cljs.core.PersistentVector.fromArray(["\ufdd0:span.content", [cljs.core.str(" "), cljs.core.str(a.call(null, "\ufdd0:content"))].join("")], !0)], !0)
 };
 todos_first.templates.focused_list_view = function(a) {
-  var b = (new cljs.core.Keyword("\ufdd0:focused-list")).call(null, a), b = cljs.core.get_in.call(null, a, cljs.core.PersistentVector.fromArray(["\ufdd0:data", "\ufdd0:todo-lists", b], !0));
-  return cljs.core.PersistentVector.fromArray(["\ufdd0:div.focused-list", cljs.core.PersistentVector.fromArray(["\ufdd0:h3", (new cljs.core.Keyword("\ufdd0:name")).call(null, b)], !0), cljs.core.PersistentVector.fromArray(["\ufdd0:ul", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:class", "unstyled"], !0), cljs.core.map.call(null, todos_first.templates.task_item_view, (new cljs.core.Keyword("\ufdd0:tasks")).call(null, b))], !0), 0 < cljs.core.count.call(null, (new cljs.core.Keyword("\ufdd0:todo-lists")).call(null, 
-  (new cljs.core.Keyword("\ufdd0:data")).call(null, a))) ? todos_first.templates.new_task_form.call(null, (new cljs.core.Keyword("\ufdd0:new-task-form")).call(null, a)) : null], !0)
+  var b = (new cljs.core.Keyword("\ufdd0:focused-list")).call(null, a), c = cljs.core.get_in.call(null, a, cljs.core.PersistentVector.fromArray(["\ufdd0:data", "\ufdd0:todo-lists", b], !0));
+  return cljs.core.PersistentVector.fromArray(["\ufdd0:div.focused-list", cljs.core.PersistentVector.fromArray(["\ufdd0:h3", (new cljs.core.Keyword("\ufdd0:name")).call(null, c), cljs.core.PersistentVector.fromArray(["\ufdd0:a.delete-list", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:href", "#", "\ufdd0:data-list-id", cljs.core.name.call(null, b)], !0), cljs.core.PersistentVector.fromArray(["\ufdd0:i", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:class", "icon-trash"], !0)], !0)], !0)], !0), 
+  cljs.core.PersistentVector.fromArray(["\ufdd0:ul", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:class", "unstyled"], !0), cljs.core.map.call(null, todos_first.templates.task_item_view, (new cljs.core.Keyword("\ufdd0:tasks")).call(null, c))], !0), 0 < cljs.core.count.call(null, (new cljs.core.Keyword("\ufdd0:todo-lists")).call(null, (new cljs.core.Keyword("\ufdd0:data")).call(null, a))) ? todos_first.templates.new_task_form.call(null, (new cljs.core.Keyword("\ufdd0:new-task-form")).call(null, 
+  a)) : null], !0)
 };
 todos_first.templates.list_and_nav_view = function(a) {
   return cljs.core.PersistentVector.fromArray(["\ufdd0:div", todos_first.templates.list_nav_view.call(null, a), todos_first.templates.focused_list_view.call(null, a)], !0)
 };
 todos_first.templates.app_view = function(a) {
-  return cljs.core.PersistentVector.fromArray(["\ufdd0:div", todos_first.templates.nav_bar.call(null), cljs.core._EQ_.call(null, a.call(null, "\ufdd0:mode"), "\ufdd0:add-list") ? todos_first.templates.new_list_form.call(null, a.call(null, "\ufdd0:new-list-form")) : todos_first.templates.list_and_nav_view.call(null, a)], !0)
+  return cljs.core.PersistentVector.fromArray(["\ufdd0:div", todos_first.templates.nav_bar.call(null), cljs.core._EQ_.call(null, a.call(null, "\ufdd0:mode"), "\ufdd0:add-list") ? todos_first.templates.new_list_form.call(null, a.call(null, "\ufdd0:new-list-form")) : 0 < cljs.core.count.call(null, (new cljs.core.Keyword("\ufdd0:todo-lists")).call(null, (new cljs.core.Keyword("\ufdd0:data")).call(null, a))) ? todos_first.templates.list_and_nav_view.call(null, a) : null], !0)
 };
 todos_first.core = {};
 todos_first.core.dlog = cljs.core.comp.call(null, jayq.util.log, cljs.core.prn_str);
 todos_first.core.click_chan = function(a, b, c) {
   return jayq.core.on.call(null, jayq.core.$.call(null, "body"), "\ufdd0:click", b, cljs.core.ObjMap.EMPTY, function(b) {
     jayq.core.prevent.call(null, b);
-    return cljs.core.async.put_BANG_.call(null, a, cljs.core.PersistentVector.fromArray([c], !0))
+    b = cljs.core.js__GT_clj.call(null, jayq.core.$.call(null, b.currentTarget).data(), "\ufdd0:keywordize-keys", !0);
+    return cljs.core.async.put_BANG_.call(null, a, cljs.core.PersistentVector.fromArray([c, b], !0))
   })
 };
 todos_first.core.fields_value_map = function(a, b) {
@@ -17837,35 +17840,35 @@ todos_first.core.filter_chan = function(a, b) {
     var d = null, e = function() {
       var a = Array(7);
       a[0] = d;
-      a[1] = 1484;
+      a[1] = 3846;
       return a
     }, f = function(c) {
       for(;;) {
         var d = c[1] | 0;
-        if(cljs.core._EQ_.call(null, 1484, d)) {
-          d = c, d[2] = null, d[1] = 1485, d[3] = "\ufdd0:recur"
+        if(cljs.core._EQ_.call(null, 3846, d)) {
+          d = c, d[2] = null, d[1] = 3847, d[3] = "\ufdd0:recur"
         }else {
-          if(cljs.core._EQ_.call(null, 1485, d)) {
-            d = c, d[2] = b, d[3] = "\ufdd0:take!", d[1] = 1487
+          if(cljs.core._EQ_.call(null, 3847, d)) {
+            d = c, d[2] = b, d[3] = "\ufdd0:take!", d[1] = 3849
           }else {
-            if(cljs.core._EQ_.call(null, 1486, d)) {
+            if(cljs.core._EQ_.call(null, 3848, d)) {
               d = c, d[2] = c[2], d[3] = "\ufdd0:return", d[1] = "\ufdd0:finished"
             }else {
-              if(cljs.core._EQ_.call(null, 1487, d)) {
+              if(cljs.core._EQ_.call(null, 3849, d)) {
                 var e = c[2], d = a.call(null, e);
                 c[6] = e;
                 e = c;
-                cljs.core.truth_(d) ? (d = e, d[1] = 1488) : (d = e, d[1] = 1489);
+                cljs.core.truth_(d) ? (d = e, d[1] = 3850) : (d = e, d[1] = 3851);
                 d[3] = "\ufdd0:recur"
               }else {
-                if(cljs.core._EQ_.call(null, 1488, d)) {
-                  d = c, d[2] = c[6], d[1] = 1490, d[3] = "\ufdd0:recur"
+                if(cljs.core._EQ_.call(null, 3850, d)) {
+                  d = c, d[2] = c[6], d[1] = 3852, d[3] = "\ufdd0:recur"
                 }else {
-                  if(cljs.core._EQ_.call(null, 1489, d)) {
-                    d = c, d[2] = null, d[1] = 1485, d[3] = "\ufdd0:recur"
+                  if(cljs.core._EQ_.call(null, 3851, d)) {
+                    d = c, d[2] = null, d[1] = 3847, d[3] = "\ufdd0:recur"
                   }else {
-                    if(cljs.core._EQ_.call(null, 1490, d)) {
-                      d = c, d[2] = c[2], d[1] = 1486, d[3] = "\ufdd0:recur"
+                    if(cljs.core._EQ_.call(null, 3852, d)) {
+                      d = c, d[2] = c[2], d[1] = 3848, d[3] = "\ufdd0:recur"
                     }else {
                       throw Error([cljs.core.str("No matching clause: "), cljs.core.str(c[1] | 0)].join(""));
                     }
@@ -17913,59 +17916,60 @@ todos_first.core.validate_edit_form = function(a) {
 todos_first.core.validate_task_form = function(a) {
   return cljs.core.truth_(clojure.string.blank_QMARK_.call(null, (new cljs.core.Keyword("\ufdd0:content")).call(null, a))) ? cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["\ufdd0:content", "can't be blank"], !0)], !0) : cljs.core.PersistentVector.EMPTY
 };
-todos_first.core.do_add_list_form = function(a, b) {
+todos_first.core.add_list = function(a, b) {
+  var c = cljs.core.seq_QMARK_.call(null, a) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, c, "\ufdd0:data"), e = cljs.core.keyword.call(null, cljs.core.name.call(null, cljs.core.gensym.call(null, "todo-list-"))), d = cljs.core.assoc_in.call(null, d, cljs.core.PersistentVector.fromArray(["\ufdd0:todo-lists", e], !0), cljs.core.PersistentArrayMap.fromArray(["\ufdd0:name", b, "\ufdd0:tasks", cljs.core.ObjMap.EMPTY], !0));
+  return cljs.core.assoc.call(null, c, "\ufdd0:data", d, "\ufdd0:focused-list", e)
+};
+todos_first.core.add_list_form_app = function(a, b) {
   var c = cljs.core.async.chan.call(null, 1);
   cljs.core.async.impl.dispatch.run.call(null, function() {
     var d = null, e = function() {
       var a = Array(10);
       a[0] = d;
-      a[1] = 1501;
+      a[1] = 3863;
       return a
     }, f = function(c) {
       for(;;) {
         var d = c[1] | 0;
-        if(cljs.core._EQ_.call(null, 1504, d)) {
-          var e = c[2], d = cljs.core.nth.call(null, e, 0, null), e = cljs.core.nth.call(null, e, 1, null), d = cljs.core._EQ_.call(null, d, "\ufdd0:cancel-new-list-form");
-          c[6] = e;
-          e = c;
-          d ? (d = e, d[1] = 1505) : (d = e, d[1] = 1506);
-          d[3] = "\ufdd0:recur"
+        if(cljs.core._EQ_.call(null, 3872, d)) {
+          d = c, d[2] = c[2], d[1] = 3869, d[3] = "\ufdd0:recur"
         }else {
-          if(cljs.core._EQ_.call(null, 1505, d)) {
-            d = c, d[2] = b, d[1] = 1507, d[3] = "\ufdd0:recur"
+          if(cljs.core._EQ_.call(null, 3863, d)) {
+            d = cljs.core.hash_map.call(null), d = cljs.core.assoc.call(null, b, "\ufdd0:mode", "\ufdd0:add-list", "\ufdd0:new-list-form", d), c[6] = d, d = c, d[2] = null, d[1] = 3864, d[3] = "\ufdd0:recur"
           }else {
-            if(cljs.core._EQ_.call(null, 1506, d)) {
-              e = todos_first.core.validate_edit_form.call(null, c[6]), d = 0 < cljs.core.count.call(null, e), c[7] = e, e = c, cljs.core.truth_(d) ? (d = e, d[1] = 1508) : (d = e, d[1] = 1509), d[3] = "\ufdd0:recur"
+            if(cljs.core._EQ_.call(null, 3864, d)) {
+              var d = todos_first.core.render_page.call(null, c[6]), e = cljs.core.hash_set.call(null, "\ufdd0:cancel-new-list-form", "\ufdd0:new-list-form-submit"), e = todos_first.core.filter_events.call(null, e, a);
+              c[7] = d;
+              d = c;
+              d[2] = e;
+              d[3] = "\ufdd0:take!";
+              d[1] = 3866
             }else {
-              if(cljs.core._EQ_.call(null, 1507, d)) {
-                d = c, d[2] = c[2], d[1] = 1503, d[3] = "\ufdd0:recur"
+              if(cljs.core._EQ_.call(null, 3865, d)) {
+                d = c, d[2] = c[2], d[3] = "\ufdd0:return", d[1] = "\ufdd0:finished"
               }else {
-                if(cljs.core._EQ_.call(null, 1508, d)) {
-                  var e = c[8], d = c[7], f = c[6], g = cljs.core.vector.call(null, "\ufdd0:new-list-form", "\ufdd0:name"), f = f.call(null, "\ufdd0:name"), e = cljs.core.assoc_in.call(null, e, g, f), g = cljs.core.vector.call(null, "\ufdd0:new-list-form", "\ufdd0:errors"), d = cljs.core.assoc_in.call(null, e, g, d);
-                  c[8] = d;
-                  d = c;
-                  d[2] = null;
-                  d[1] = 1502;
-                  d[3] = "\ufdd0:recur"
+                if(cljs.core._EQ_.call(null, 3866, d)) {
+                  e = c[2], d = cljs.core.nth.call(null, e, 0, null), e = cljs.core.nth.call(null, e, 1, null), d = cljs.core._EQ_.call(null, d, "\ufdd0:cancel-new-list-form"), c[8] = e, e = c, d ? (d = e, d[1] = 3867) : (d = e, d[1] = 3868), d[3] = "\ufdd0:recur"
                 }else {
-                  if(cljs.core._EQ_.call(null, 1509, d)) {
-                    var f = c[6], d = b.call(null, "\ufdd0:data"), e = cljs.core.gensym.call(null, "todo-list"), e = cljs.core.name.call(null, e), e = cljs.core.keyword.call(null, e), g = cljs.core.vector.call(null, "\ufdd0:todo-lists", e), f = f.call(null, "\ufdd0:name"), l = cljs.core.hash_map.call(null), f = cljs.core.hash_map.call(null, "\ufdd0:name", f, "\ufdd0:tasks", l), d = cljs.core.assoc_in.call(null, d, g, f), d = cljs.core.assoc.call(null, b, "\ufdd0:data", d, "\ufdd0:focused-list", e), 
-                    e = c;
-                    e[2] = d;
-                    e[1] = 1510;
-                    e[3] = "\ufdd0:recur"
+                  if(cljs.core._EQ_.call(null, 3867, d)) {
+                    d = c, d[2] = b, d[1] = 3869, d[3] = "\ufdd0:recur"
                   }else {
-                    if(cljs.core._EQ_.call(null, 1510, d)) {
-                      d = c, d[2] = c[2], d[1] = 1507, d[3] = "\ufdd0:recur"
+                    if(cljs.core._EQ_.call(null, 3868, d)) {
+                      e = todos_first.core.validate_edit_form.call(null, c[8]), d = 0 < cljs.core.count.call(null, e), c[9] = e, e = c, cljs.core.truth_(d) ? (d = e, d[1] = 3870) : (d = e, d[1] = 3871), d[3] = "\ufdd0:recur"
                     }else {
-                      if(cljs.core._EQ_.call(null, 1501, d)) {
-                        d = cljs.core.hash_map.call(null), d = cljs.core.assoc.call(null, b, "\ufdd0:mode", "\ufdd0:add-list", "\ufdd0:new-list-form", d), c[8] = d, d = c, d[2] = null, d[1] = 1502, d[3] = "\ufdd0:recur"
+                      if(cljs.core._EQ_.call(null, 3869, d)) {
+                        d = c, d[2] = c[2], d[1] = 3865, d[3] = "\ufdd0:recur"
                       }else {
-                        if(cljs.core._EQ_.call(null, 1502, d)) {
-                          d = todos_first.core.render_page.call(null, c[8]), e = cljs.core.hash_set.call(null, "\ufdd0:cancel-new-list-form", "\ufdd0:new-list-form-submit"), e = todos_first.core.filter_events.call(null, e, a), c[9] = d, d = c, d[2] = e, d[3] = "\ufdd0:take!", d[1] = 1504
+                        if(cljs.core._EQ_.call(null, 3870, d)) {
+                          var d = c[6], e = c[9], f = c[8].call(null, "\ufdd0:name"), e = cljs.core.hash_map.call(null, "\ufdd0:name", f, "\ufdd0:errors", e), d = cljs.core.assoc.call(null, d, "\ufdd0:new-list-form", e);
+                          c[6] = d;
+                          d = c;
+                          d[2] = null;
+                          d[1] = 3864;
+                          d[3] = "\ufdd0:recur"
                         }else {
-                          if(cljs.core._EQ_.call(null, 1503, d)) {
-                            d = c, d[2] = c[2], d[3] = "\ufdd0:return", d[1] = "\ufdd0:finished"
+                          if(cljs.core._EQ_.call(null, 3871, d)) {
+                            d = c[8].call(null, "\ufdd0:name"), d = todos_first.core.add_list.call(null, b, d), e = c, e[2] = d, e[1] = 3872, e[3] = "\ufdd0:recur"
                           }else {
                             throw Error([cljs.core.str("No matching clause: "), cljs.core.str(c[1] | 0)].join(""));
                           }
@@ -18000,13 +18004,31 @@ todos_first.core.do_add_list_form = function(a, b) {
   });
   return c
 };
+todos_first.core.add_task = function(a, b) {
+  var c = cljs.core.seq_QMARK_.call(null, a) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, c, "\ufdd0:focused-list"), e = cljs.core.keyword.call(null, cljs.core.name.call(null, cljs.core.gensym.call(null, "task"))), d = cljs.core.assoc_in.call(null, c.call(null, "\ufdd0:data"), cljs.core.PersistentVector.fromArray(["\ufdd0:todo-lists", d, "\ufdd0:tasks", e, "\ufdd0:content"], !0), b);
+  return cljs.core.assoc.call(null, c, "\ufdd0:data", d)
+};
 todos_first.core.do_add_task = function(a, b) {
   var c = todos_first.core.validate_task_form.call(null, b);
-  if(0 < cljs.core.count.call(null, c)) {
-    return cljs.core.assoc.call(null, a, "\ufdd0:new-task-form", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:content", (new cljs.core.Keyword("\ufdd0:content")).call(null, b), "\ufdd0:errors", c], !0))
-  }
-  var c = a.call(null, "\ufdd0:focused-list"), d = cljs.core.keyword.call(null, cljs.core.name.call(null, cljs.core.gensym.call(null, "task"))), c = cljs.core.assoc_in.call(null, a.call(null, "\ufdd0:data"), cljs.core.PersistentVector.fromArray(["\ufdd0:todo-lists", c, "\ufdd0:tasks", d], !0), cljs.core.PersistentArrayMap.fromArray(["\ufdd0:content", b.call(null, "\ufdd0:content")], !0));
-  return cljs.core.assoc.call(null, a, "\ufdd0:data", c, "\ufdd0:new-task-form", cljs.core.ObjMap.EMPTY)
+  return 0 < cljs.core.count.call(null, c) ? cljs.core.assoc.call(null, a, "\ufdd0:new-task-form", cljs.core.PersistentArrayMap.fromArray(["\ufdd0:content", (new cljs.core.Keyword("\ufdd0:content")).call(null, b), "\ufdd0:errors", c], !0)) : cljs.core.dissoc.call(null, todos_first.core.add_task.call(null, a, (new cljs.core.Keyword("\ufdd0:content")).call(null, b)), "\ufdd0:new-task-form")
+};
+todos_first.core.select_list = function(a, b) {
+  var c = cljs.core.seq_QMARK_.call(null, b) ? cljs.core.apply.call(null, cljs.core.hash_map, b) : b, c = cljs.core.get.call(null, c, "\ufdd0:listId");
+  return cljs.core.assoc.call(null, a, "\ufdd0:focused-list", cljs.core.keyword.call(null, c))
+};
+todos_first.core.delete_task = function(a, b) {
+  var c = cljs.core.seq_QMARK_.call(null, a) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, c, "\ufdd0:data"), e = cljs.core.seq_QMARK_.call(null, b) ? cljs.core.apply.call(null, cljs.core.hash_map, b) : b, e = cljs.core.get.call(null, e, "\ufdd0:taskId");
+  return cljs.core.assoc.call(null, c, "\ufdd0:data", cljs.core.update_in.call(null, d, cljs.core.PersistentVector.fromArray(["\ufdd0:todo-lists", (new cljs.core.Keyword("\ufdd0:focused-list")).call(null, c), "\ufdd0:tasks"], !0), cljs.core.dissoc, cljs.core.keyword.call(null, e)))
+};
+todos_first.core.complete_task = function(a, b) {
+  var c = cljs.core.seq_QMARK_.call(null, a) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, c, "\ufdd0:data"), e = cljs.core.seq_QMARK_.call(null, b) ? cljs.core.apply.call(null, cljs.core.hash_map, b) : b, e = cljs.core.get.call(null, e, "\ufdd0:taskId");
+  return cljs.core.assoc.call(null, c, "\ufdd0:data", cljs.core.assoc_in.call(null, d, cljs.core.PersistentVector.fromArray(["\ufdd0:todo-lists", (new cljs.core.Keyword("\ufdd0:focused-list")).call(null, c), "\ufdd0:tasks", cljs.core.keyword.call(null, e), "\ufdd0:completed"], !0), !0))
+};
+todos_first.core.delete_list = function(a, b) {
+  var c = cljs.core.seq_QMARK_.call(null, a) ? cljs.core.apply.call(null, cljs.core.hash_map, a) : a, d = cljs.core.get.call(null, c, "\ufdd0:data"), e = cljs.core.seq_QMARK_.call(null, b) ? cljs.core.apply.call(null, cljs.core.hash_map, b) : b;
+  cljs.core.get.call(null, e, "\ufdd0:listId");
+  d = cljs.core.update_in.call(null, d, cljs.core.PersistentVector.fromArray(["\ufdd0:todo-lists"], !0), cljs.core.dissoc, (new cljs.core.Keyword("\ufdd0:focused-list")).call(null, c));
+  return cljs.core.assoc.call(null, c, "\ufdd0:data", d, "\ufdd0:focused-list", cljs.core.first.call(null, cljs.core.first.call(null, (new cljs.core.Keyword("\ufdd0:todo-lists")).call(null, d))))
 };
 todos_first.core.app_loop = function(a) {
   var b = cljs.core.async.chan.call(null);
@@ -18014,61 +18036,109 @@ todos_first.core.app_loop = function(a) {
   todos_first.core.form_submit_chan.call(null, b, ".new-list-form", "\ufdd0:new-list-form-submit", cljs.core.PersistentVector.fromArray(["\ufdd0:name"], !0));
   todos_first.core.click_chan.call(null, b, ".cancel-new-list", "\ufdd0:cancel-new-list-form");
   todos_first.core.form_submit_chan.call(null, b, ".new-task-form", "\ufdd0:new-task-form-submit", cljs.core.PersistentVector.fromArray(["\ufdd0:content"], !0));
+  todos_first.core.click_chan.call(null, b, ".list-nav a", "\ufdd0:select-list");
+  todos_first.core.click_chan.call(null, b, "a.delete-list", "\ufdd0:delete-list");
+  todos_first.core.click_chan.call(null, b, "a.delete-task", "\ufdd0:delete-task");
+  todos_first.core.click_chan.call(null, b, "a.complete-task", "\ufdd0:complete-task");
   var c = cljs.core.async.chan.call(null, 1);
   cljs.core.async.impl.dispatch.run.call(null, function() {
     var d = null, e = function() {
       var a = Array(11);
       a[0] = d;
-      a[1] = 1522;
+      a[1] = 3896;
       return a
     }, f = function(c) {
       for(;;) {
         var d = c[1] | 0;
-        if(cljs.core._EQ_.call(null, 1522, d)) {
-          c[6] = a, d = c, d[2] = null, d[1] = 1523, d[3] = "\ufdd0:recur"
+        if(cljs.core._EQ_.call(null, 3904, d)) {
+          d = todos_first.core.do_add_task.call(null, c[7], c[6]), c[7] = d, d = c, d[2] = null, d[1] = 3897, d[3] = "\ufdd0:recur"
         }else {
-          if(cljs.core._EQ_.call(null, 1523, d)) {
-            var d = c[6], e = cljs.core.prn_str.call(null, d), e = jayq.util.log.call(null, "loop top", e), d = todos_first.core.render_page.call(null, d);
-            c[7] = d;
-            c[8] = e;
-            d = c;
-            d[2] = b;
-            d[3] = "\ufdd0:take!";
-            d[1] = 1525
+          if(cljs.core._EQ_.call(null, 3905, d)) {
+            var d = cljs.core._EQ_.call(null, "\ufdd0:select-list", c[8]), e = c;
+            d ? (d = e, d[1] = 3907) : (d = e, d[1] = 3908);
+            d[3] = "\ufdd0:recur"
           }else {
-            if(cljs.core._EQ_.call(null, 1524, d)) {
-              d = c, d[2] = c[2], d[3] = "\ufdd0:return", d[1] = "\ufdd0:finished"
+            if(cljs.core._EQ_.call(null, 3906, d)) {
+              d = c, d[2] = c[2], d[1] = 3902, d[3] = "\ufdd0:recur"
             }else {
-              if(cljs.core._EQ_.call(null, 1525, d)) {
-                var e = c[2], f = cljs.core.first.call(null, e), d = cljs.core._EQ_.call(null, "\ufdd0:get-new-list", f);
-                c[9] = f;
-                c[10] = e;
-                e = c;
-                d ? (d = e, d[1] = 1526) : (d = e, d[1] = 1527);
-                d[3] = "\ufdd0:recur"
+              if(cljs.core._EQ_.call(null, 3907, d)) {
+                d = todos_first.core.select_list.call(null, c[7], c[6]), c[7] = d, d = c, d[2] = null, d[1] = 3897, d[3] = "\ufdd0:recur"
               }else {
-                if(cljs.core._EQ_.call(null, 1526, d)) {
-                  d = todos_first.core.do_add_list_form.call(null, b, c[6]), e = c, e[2] = d, e[3] = "\ufdd0:take!", e[1] = 1529
+                if(cljs.core._EQ_.call(null, 3908, d)) {
+                  d = cljs.core._EQ_.call(null, "\ufdd0:delete-list", c[8]), e = c, d ? (d = e, d[1] = 3910) : (d = e, d[1] = 3911), d[3] = "\ufdd0:recur"
                 }else {
-                  if(cljs.core._EQ_.call(null, 1527, d)) {
-                    d = cljs.core._EQ_.call(null, "\ufdd0:new-task-form-submit", c[9]), e = c, d ? (d = e, d[1] = 1530) : (d = e, d[1] = 1531), d[3] = "\ufdd0:recur"
+                  if(cljs.core._EQ_.call(null, 3909, d)) {
+                    d = c, d[2] = c[2], d[1] = 3906, d[3] = "\ufdd0:recur"
                   }else {
-                    if(cljs.core._EQ_.call(null, 1528, d)) {
-                      d = c, d[2] = c[2], d[1] = 1524, d[3] = "\ufdd0:recur"
+                    if(cljs.core._EQ_.call(null, 3910, d)) {
+                      d = todos_first.core.delete_list.call(null, c[7], c[6]), c[7] = d, d = c, d[2] = null, d[1] = 3897, d[3] = "\ufdd0:recur"
                     }else {
-                      if(cljs.core._EQ_.call(null, 1529, d)) {
-                        c[6] = c[2], d = c, d[2] = null, d[1] = 1523, d[3] = "\ufdd0:recur"
+                      if(cljs.core._EQ_.call(null, 3911, d)) {
+                        d = cljs.core._EQ_.call(null, "\ufdd0:delete-task", c[8]), e = c, d ? (d = e, d[1] = 3913) : (d = e, d[1] = 3914), d[3] = "\ufdd0:recur"
                       }else {
-                        if(cljs.core._EQ_.call(null, 1530, d)) {
-                          d = c[6], e = cljs.core.last.call(null, c[10]), d = todos_first.core.do_add_task.call(null, d, e), c[6] = d, d = c, d[2] = null, d[1] = 1523, d[3] = "\ufdd0:recur"
+                        if(cljs.core._EQ_.call(null, 3912, d)) {
+                          d = c, d[2] = c[2], d[1] = 3909, d[3] = "\ufdd0:recur"
                         }else {
-                          if(cljs.core._EQ_.call(null, 1531, d)) {
-                            c[6] = c[6], d = c, d[2] = null, d[1] = 1523, d[3] = "\ufdd0:recur"
+                          if(cljs.core._EQ_.call(null, 3913, d)) {
+                            d = todos_first.core.delete_task.call(null, c[7], c[6]), c[7] = d, d = c, d[2] = null, d[1] = 3897, d[3] = "\ufdd0:recur"
                           }else {
-                            if(cljs.core._EQ_.call(null, 1532, d)) {
-                              d = c, d[2] = c[2], d[1] = 1528, d[3] = "\ufdd0:recur"
+                            if(cljs.core._EQ_.call(null, 3914, d)) {
+                              d = cljs.core._EQ_.call(null, "\ufdd0:complete-task", c[8]), e = c, d ? (d = e, d[1] = 3916) : (d = e, d[1] = 3917), d[3] = "\ufdd0:recur"
                             }else {
-                              throw Error([cljs.core.str("No matching clause: "), cljs.core.str(c[1] | 0)].join(""));
+                              if(cljs.core._EQ_.call(null, 3915, d)) {
+                                d = c, d[2] = c[2], d[1] = 3912, d[3] = "\ufdd0:recur"
+                              }else {
+                                if(cljs.core._EQ_.call(null, 3916, d)) {
+                                  d = todos_first.core.complete_task.call(null, c[7], c[6]), c[7] = d, d = c, d[2] = null, d[1] = 3897, d[3] = "\ufdd0:recur"
+                                }else {
+                                  if(cljs.core._EQ_.call(null, 3917, d)) {
+                                    c[7] = c[7], d = c, d[2] = null, d[1] = 3897, d[3] = "\ufdd0:recur"
+                                  }else {
+                                    if(cljs.core._EQ_.call(null, 3918, d)) {
+                                      d = c, d[2] = c[2], d[1] = 3915, d[3] = "\ufdd0:recur"
+                                    }else {
+                                      if(cljs.core._EQ_.call(null, 3896, d)) {
+                                        c[7] = a, d = c, d[2] = null, d[1] = 3897, d[3] = "\ufdd0:recur"
+                                      }else {
+                                        if(cljs.core._EQ_.call(null, 3897, d)) {
+                                          d = c[7], e = cljs.core.prn_str.call(null, d), e = jayq.util.log.call(null, "loop top ", e), d = todos_first.core.render_page.call(null, d), c[9] = e, c[10] = d, d = c, d[2] = b, d[3] = "\ufdd0:take!", d[1] = 3899
+                                        }else {
+                                          if(cljs.core._EQ_.call(null, 3898, d)) {
+                                            d = c, d[2] = c[2], d[3] = "\ufdd0:return", d[1] = "\ufdd0:finished"
+                                          }else {
+                                            if(cljs.core._EQ_.call(null, 3899, d)) {
+                                              var e = c[2], d = cljs.core.nth.call(null, e, 0, null), f = cljs.core.nth.call(null, e, 1, null), e = cljs.core._EQ_.call(null, "\ufdd0:get-new-list", d);
+                                              c[6] = f;
+                                              c[8] = d;
+                                              d = c;
+                                              d[1] = e ? 3900 : 3901;
+                                              d[3] = "\ufdd0:recur"
+                                            }else {
+                                              if(cljs.core._EQ_.call(null, 3900, d)) {
+                                                d = todos_first.core.add_list_form_app.call(null, b, c[7]), e = c, e[2] = d, e[3] = "\ufdd0:take!", e[1] = 3903
+                                              }else {
+                                                if(cljs.core._EQ_.call(null, 3901, d)) {
+                                                  d = cljs.core._EQ_.call(null, "\ufdd0:new-task-form-submit", c[8]), e = c, d ? (d = e, d[1] = 3904) : (d = e, d[1] = 3905), d[3] = "\ufdd0:recur"
+                                                }else {
+                                                  if(cljs.core._EQ_.call(null, 3902, d)) {
+                                                    d = c, d[2] = c[2], d[1] = 3898, d[3] = "\ufdd0:recur"
+                                                  }else {
+                                                    if(cljs.core._EQ_.call(null, 3903, d)) {
+                                                      c[7] = c[2], d = c, d[2] = null, d[1] = 3897, d[3] = "\ufdd0:recur"
+                                                    }else {
+                                                      throw Error([cljs.core.str("No matching clause: "), cljs.core.str(c[1] | 0)].join(""));
+                                                    }
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
                             }
                           }
                         }
