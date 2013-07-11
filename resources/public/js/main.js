@@ -17805,24 +17805,24 @@ async_explore.core.app_loop = function(a) {
         var f = null, h = function() {
           var a = Array(10);
           a[0] = f;
-          a[1] = 136;
+          a[1] = 16;
           return a
         }, p = function(f) {
           for(;;) {
             var h = f[1] | 0;
-            if(cljs.core._EQ_.call(null, 136, h)) {
+            if(cljs.core._EQ_.call(null, 16, h)) {
               var k;
               f[6] = a;
               k = f;
               k[2] = null;
-              k[1] = 137;
+              k[1] = 17;
               k[3] = "\ufdd0:recur"
             }else {
-              if(cljs.core._EQ_.call(null, 137, h)) {
+              if(cljs.core._EQ_.call(null, 17, h)) {
                 var n = f[6], p = async_explore.core.render_app.call(null, n, async_explore.core.app_and_edit_view), q = cljs.core.vector.call(null, d, e);
                 f[7] = p;
                 var P = k = f;
-                P[1] = 139;
+                P[1] = 19;
                 P[3] = null;
                 h = cljs.core.async.do_alts.call(null, function(a, b, c, d) {
                   return function(a) {
@@ -17834,29 +17834,29 @@ async_explore.core.app_loop = function(a) {
                 }(n, p, q, k, h, b, c, d, e), q, null);
                 cljs.core.truth_(h) && (k[2] = cljs.core.deref.call(null, h), k[3] = "\ufdd0:recur")
               }else {
-                if(cljs.core._EQ_.call(null, 138, h)) {
+                if(cljs.core._EQ_.call(null, 18, h)) {
                   k = f, k[2] = f[2], k[3] = "\ufdd0:return", k[1] = "\ufdd0:finished"
                 }else {
-                  if(cljs.core._EQ_.call(null, 139, h)) {
-                    h = f[2], k = cljs.core.nth.call(null, h, 0, null), h = cljs.core.nth.call(null, h, 1, null), h = cljs.core._EQ_.call(null, h, e), f[8] = k, k = f, k[1] = h ? 140 : 141, k[3] = "\ufdd0:recur"
+                  if(cljs.core._EQ_.call(null, 19, h)) {
+                    h = f[2], k = cljs.core.nth.call(null, h, 0, null), h = cljs.core.nth.call(null, h, 1, null), h = cljs.core._EQ_.call(null, h, e), f[8] = k, k = f, k[1] = h ? 20 : 21, k[3] = "\ufdd0:recur"
                   }else {
-                    if(cljs.core._EQ_.call(null, 140, h)) {
-                      k = f, k[2] = a, k[1] = 142, k[3] = "\ufdd0:recur"
+                    if(cljs.core._EQ_.call(null, 20, h)) {
+                      k = f, k[2] = a, k[1] = 22, k[3] = "\ufdd0:recur"
                     }else {
-                      if(cljs.core._EQ_.call(null, 141, h)) {
-                        h = async_explore.core.validate_edit_form.call(null, f[8]), k = 0 < cljs.core.count.call(null, h), f[9] = h, h = f, cljs.core.truth_(k) ? (k = h, k[1] = 143) : (k = h, k[1] = 144), k[3] = "\ufdd0:recur"
+                      if(cljs.core._EQ_.call(null, 21, h)) {
+                        h = async_explore.core.validate_edit_form.call(null, f[8]), k = 0 < cljs.core.count.call(null, h), f[9] = h, h = f, cljs.core.truth_(k) ? (k = h, k[1] = 23) : (k = h, k[1] = 24), k[3] = "\ufdd0:recur"
                       }else {
-                        if(cljs.core._EQ_.call(null, 142, h)) {
-                          k = f, k[2] = f[2], k[1] = 138, k[3] = "\ufdd0:recur"
+                        if(cljs.core._EQ_.call(null, 22, h)) {
+                          k = f, k[2] = f[2], k[1] = 18, k[3] = "\ufdd0:recur"
                         }else {
-                          if(cljs.core._EQ_.call(null, 143, h)) {
-                            k = f[9], h = cljs.core.merge.call(null, f[6], f[8]), k = cljs.core.assoc.call(null, h, "\ufdd0:form-errors", k), f[6] = k, k = f, k[2] = null, k[1] = 137, k[3] = "\ufdd0:recur"
+                          if(cljs.core._EQ_.call(null, 23, h)) {
+                            k = f[9], h = cljs.core.merge.call(null, f[6], f[8]), k = cljs.core.assoc.call(null, h, "\ufdd0:form-errors", k), f[6] = k, k = f, k[2] = null, k[1] = 17, k[3] = "\ufdd0:recur"
                           }else {
-                            if(cljs.core._EQ_.call(null, 144, h)) {
-                              k = cljs.core.merge.call(null, a, f[8]), h = f, h[2] = k, h[1] = 145, h[3] = "\ufdd0:recur"
+                            if(cljs.core._EQ_.call(null, 24, h)) {
+                              k = cljs.core.merge.call(null, a, f[8]), h = f, h[2] = k, h[1] = 25, h[3] = "\ufdd0:recur"
                             }else {
-                              if(cljs.core._EQ_.call(null, 145, h)) {
-                                k = f, k[2] = f[2], k[1] = 142, k[3] = "\ufdd0:recur"
+                              if(cljs.core._EQ_.call(null, 25, h)) {
+                                k = f, k[2] = f[2], k[1] = 22, k[3] = "\ufdd0:recur"
                               }else {
                                 throw Error([cljs.core.str("No matching clause: "), cljs.core.str(f[1] | 0)].join(""));
                               }
@@ -17897,30 +17897,30 @@ async_explore.core.app_loop = function(a) {
     var c = null, e = function() {
       var a = Array(9);
       a[0] = c;
-      a[1] = 146;
+      a[1] = 26;
       return a
     }, i = function(c) {
       for(;;) {
         var e = c[1] | 0;
-        if(cljs.core._EQ_.call(null, 146, e)) {
-          c[6] = a, e = c, e[2] = null, e[1] = 147, e[3] = "\ufdd0:recur"
+        if(cljs.core._EQ_.call(null, 26, e)) {
+          c[6] = a, e = c, e[2] = null, e[1] = 27, e[3] = "\ufdd0:recur"
         }else {
-          if(cljs.core._EQ_.call(null, 147, e)) {
-            e = async_explore.core.render_app.call(null, c[6], async_explore.core.app_view), c[8] = e, e = c, e[2] = b, e[3] = "\ufdd0:take!", e[1] = 149
+          if(cljs.core._EQ_.call(null, 27, e)) {
+            e = async_explore.core.render_app.call(null, c[6], async_explore.core.app_view), c[8] = e, e = c, e[2] = b, e[3] = "\ufdd0:take!", e[1] = 29
           }else {
-            if(cljs.core._EQ_.call(null, 148, e)) {
+            if(cljs.core._EQ_.call(null, 28, e)) {
               e = c, e[2] = c[2], e[3] = "\ufdd0:return", e[1] = "\ufdd0:finished"
             }else {
-              if(cljs.core._EQ_.call(null, 149, e)) {
+              if(cljs.core._EQ_.call(null, 29, e)) {
                 var f = c[2], e = d.call(null, c[6]);
                 c[7] = f;
                 f = c;
                 f[2] = e;
                 f[3] = "\ufdd0:take!";
-                f[1] = 150
+                f[1] = 30
               }else {
-                if(cljs.core._EQ_.call(null, 150, e)) {
-                  c[6] = c[2], e = c, e[2] = null, e[1] = 147, e[3] = "\ufdd0:recur"
+                if(cljs.core._EQ_.call(null, 30, e)) {
+                  c[6] = c[2], e = c, e[2] = null, e[1] = 27, e[3] = "\ufdd0:recur"
                 }else {
                   throw Error([cljs.core.str("No matching clause: "), cljs.core.str(c[1] | 0)].join(""));
                 }

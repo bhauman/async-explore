@@ -12,4 +12,9 @@
               :builds [{:source-paths ["src/cljs"]
                         :compiler {:output-to "resources/public/js/main.js"
                                    :optimizations :simple
+                                   :pretty-print true}}
+                       {:id "todos-first"
+                        :source-paths ["src/todos_first"]
+                        :compiler {:output-to "resources/public/js/todos-first.js"
+                                   :optimizations :simple
                                    :pretty-print true}}]})
