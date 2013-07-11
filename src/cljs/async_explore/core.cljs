@@ -10,7 +10,7 @@
   (.log js/console arg))
 
 (defn click-chan [selector value]
-  (let [rc (chan)]
+  (let [rc (chan (sliding-buffer 1))]
     (on ($ "body") :click selector {} (fn [e] (jq/prevent e) (put! rc value)))
     rc))
 
@@ -52,6 +52,11 @@
      [:input {:type "submit" :value "Save" :class "btn btn-primary"}]
      [:a {:href "#" :class " cancel-edit btn"} "cancel"]]]])
 
+(defn app-and-edit-view [state]
+  [:div.app-edit
+   (app-view state)
+   (edit-view state)])
+
 (defn render-app [state view-func]
   (let [elem ($ ".container")]
     (log elem)
@@ -61,26 +66,24 @@
 (defn app-loop [start-state]
   (let [edit-click       (click-chan ".app a.edit" :edit)
         edit-form-submit (form-submit-chan ".app form.edit-form" [:message])
-        cancel-edit-form (click-chan ".app form a.cancel-edit" :cancel)]
+        cancel-edit-form (click-chan ".app form a.cancel-edit" :cancel)
+        do-edit-form (fn [state]
+                       (go
+                        (loop [form-state state]
+                          (render-app form-state app-and-edit-view)
+                          (let [[form-result ch] (alts! [edit-form-submit cancel-edit-form])]
+                            (if (= ch cancel-edit-form)
+                              state
+                              (let [errors (validate-edit-form form-result)]
+                                (if (< 0 (count errors))
+                                  (recur (-> form-state (merge form-result) (assoc :form-errors errors)))
+                                  (merge state form-result)
+                                  )))))))]
     (go ;; main loop
      (loop [state start-state]
        (render-app state app-view)
        (<! edit-click)
-       (recur
-        (loop [form-state state]
-          (render-app form-state edit-view)
-          (let [[form-result ch] (alts! [edit-form-submit cancel-edit-form])]
-            (if (= ch cancel-edit-form)
-              state
-              (let [errors (validate-edit-form form-result)]
-                (if (< 0 (count errors))
-                  (recur (-> form-state (merge form-result) (assoc :form-errors errors)))
-                  (merge state form-result)
-                  )
-                )
-              ))
-          )
-        )))))
+       (recur (<! (do-edit-form state)))))))
 
 (defn setup []
   (.log js/console "Hello"))
