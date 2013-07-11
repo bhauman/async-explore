@@ -1,0 +1,12 @@
+.focused-list .completed .content {
+   text-decoration: line-through;
+}
+.focused-list .spacer {
+   padding-left: 14px;
+}
+
+.focused-list .delete-list {
+   position: relative;
+   top: 10px;
+   left: 20px;
+}
