@@ -1,15 +1,7 @@
-(ns todos-first.templates
-  (:require
-   [cljs.core.async :as async
-             :refer [<! >! chan close! sliding-buffer put!]]
-   [jayq.core :refer [$ append ajax inner $deferred when done resolve pipe on] :as jq]
-   [jayq.util :refer [log]]
-   [crate.core :as crate]
-   [clojure.string :refer [join blank?]])
-  (:require-macros [cljs.core.async.macros :as m :refer [go alt!]]))
+(ns todos-first.templates)
 
 (defn nav-bar []
-  [:div.navbar
+  [:div.navbar 
    [:div.navbar-inner
     [:a.brand { :href "#" } "Todos"]
     [:ul.nav
@@ -52,8 +44,8 @@
   [:li (if (:completed task) {:class "completed"} {})
    [:a.delete-task   {:href "#" :data-task-id (name task-id)} [:i.icon-remove]]
    (if (:completed task)
-     [:span.spacer " "]
-     [:a.complete-task {:href "#" :data-task-id (name task-id)} [:i.icon-ok]]) 
+     [:i.icon-ok-sign]
+     [:a.complete-task {:href "#" :data-task-id (name task-id)} [:i.icon-ok-circle]]) 
    [:span.content (str " " (task :content))]])
 
 (defn focused-list-view [state]
@@ -72,8 +64,7 @@
 (defn list-and-nav-view [state]
   [:div
    (list-nav-view state)
-   (focused-list-view state)
-   ] 
+   (focused-list-view state)] 
   )
 
 (defn app-view [state]
