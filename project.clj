@@ -10,11 +10,11 @@
   :plugins [[lein-cljsbuild "0.3.2"]]
   :cljsbuild {
               :builds [{:source-paths ["src/cljs"]
-                        :compiler {:output-to "resources/public/js/main.js"
+                        :compiler {:output-to "resources/public/js/compiled/main.js"
                                    :optimizations :simple
                                    :pretty-print true}}
                        {:id "todos-first"
                         :source-paths ["src/todos_first"]
-                        :compiler {:output-to "resources/public/js/todos-first.js"
+                        :compiler {:output-to "resources/public/js/compiled/todos-first.js"
                                    :optimizations :simple
                                    :pretty-print true}}]})

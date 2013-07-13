@@ -6,10 +6,22 @@
    [jayq.util :refer [log]]
    [crate.core :as crate]
    [clojure.string :refer [join blank?]]
-   [todos-first.templates :refer [app-view]])
+   [goog.net.Cookies :as gCookies]
+   [todos-first.templates :refer [app-view]]
+   [todos-first.client :refer [doc-create doc-assoc doc-remove doc-get remote-id]])
   (:require-macros [cljs.core.async.macros :as m :refer [go alt!]]))
 
 (def dlog (comp log prn-str))
+
+(defn uuid []
+  (letfn [(f [] (.toString (rand-int 16) 16))
+          (g [] (.toString  (bit-or 0x8 (bit-and 0x3 (rand-int 15))) 16))]
+    (str
+     (f) (f) (f) (f) (f) (f) (f) (f) "-" (f) (f) (f) (f) 
+     "-4" (f) (f) (f) "-" (g) (f) (f) (f) "-"
+     (f) (f) (f) (f) (f) (f) (f) (f) (f) (f) (f) (f))))
+
+(def cookies (goog.net.Cookies. js/document))
 
 (defn click-chan [input-chan selector ev-name]
   (on ($ "body") :click selector {}
@@ -55,12 +67,13 @@
     []))
 
 (defn add-list [{:keys [data] :as state} list-name]
-  (let [new-sym (-> "todo-list-" gensym name keyword)
-        new-data (assoc-in data [:todo-lists new-sym]
-                           {:name list-name :tasks {}})]
-    (assoc state
-      :data new-data
-      :focused-list new-sym)))
+  (go
+   (let [new-sym (keyword (uuid))
+         new-data (<! (doc-assoc data [:todo-lists new-sym]
+                                 {:name list-name :tasks {}}))]
+     (assoc state
+       :data new-data
+       :focused-list new-sym))))
 
 (defn add-list-form-app [input-chan state]
   (go
@@ -77,52 +90,57 @@
            (if (pos? (count errors))
              (recur (assoc form-state :new-list-form {:name (form-result :name)
                                                       :errors errors}))
-             (add-list state (form-result :name)))))))))
+             (<! (add-list state (form-result :name))))))))))
 
 (defn add-task [{:keys [focused-list] :as state} content]
-  (let [new-task-id (-> "task" gensym name keyword)
-        new-data (assoc-in (state :data) [:todo-lists
-                                          focused-list
-                                          :tasks
-                                          new-task-id
-                                          :content]
-                           content)]
-    (assoc state :data new-data)))
+  (go
+   (let [new-task-id (keyword (uuid))
+         new-data (<! (doc-assoc (state :data) [:todo-lists
+                                                focused-list
+                                                :tasks
+                                                new-task-id
+                                                :content]
+                                 content))]
+     (assoc state :data new-data))))
 
 (defn do-add-task [state form-vals]
-  (let [errors (validate-task-form form-vals)]
-    (if (pos? (count errors))
-      (assoc state :new-task-form { :content (:content form-vals)
+  (go
+   (let [errors (validate-task-form form-vals)]
+     (if (pos? (count errors))
+       (assoc state :new-task-form { :content (:content form-vals)
                                     :errors  errors })
-      (-> state
-          (add-task (:content form-vals))
-          (dissoc :new-task-form)))))
+       (-> (<! (add-task state (:content form-vals)))
+           (dissoc :new-task-form))))))
 
 (defn select-list [state {:keys [listId]}]
   (assoc state :focused-list (keyword listId)))
 
 (defn delete-task [{:keys [data] :as state} {:keys [taskId]}]
-  (assoc state :data
-         (update-in data
-                    [:todo-lists
-                     (:focused-list state)
-                     :tasks] dissoc (keyword taskId))))
+  (go
+   (assoc state :data
+          (<! (doc-remove data
+                          [:todo-lists
+                           (:focused-list state)
+                           :tasks (keyword taskId)])))))
 
 (defn complete-task [{:keys [data] :as state} {:keys [taskId]}]
-  (assoc state :data
-         (assoc-in data
-                   [:todo-lists
-                    (:focused-list state)
-                    :tasks
-                    (keyword taskId)
-                    :completed] true )))
+  (go
+   (assoc state :data
+          (<! (doc-assoc data
+                         [:todo-lists
+                          (:focused-list state)
+                          :tasks
+                          (keyword taskId)
+                          :completed] true )))))
 
 (defn delete-list [{:keys [data] :as state} {:keys [listId]}]
-  (let [updated-data (update-in data
-                                [:todo-lists] dissoc (:focused-list state))]
-    (assoc state
-      :data updated-data
-      :focused-list (-> updated-data :todo-lists first first))))
+  (go
+   (let [updated-data (<! (doc-remove data
+                                      [:todo-lists (:focused-list state)]))]
+     (assoc state
+       :data updated-data
+       :focused-list (-> updated-data :todo-lists first first)))
+   ))
 
 (defn app-loop [start-state]
   (let [input-chan (chan)]
@@ -137,19 +155,27 @@
     (go
      (loop [state start-state]
        (log "loop top " (prn-str state))
+       (.set cookies "todos-app1" (-> state :data remote-id))
        (render-page state)
        (let [[ev-name ev-data] (<! input-chan)]
          (condp = ev-name
            :get-new-list (recur (<! (add-list-form-app input-chan state)))
-           :new-task-form-submit (recur (do-add-task state ev-data))
+           :new-task-form-submit (recur (<! (do-add-task state ev-data)))
            :select-list (recur (select-list state ev-data))
-           :delete-list (recur (delete-list state ev-data))           
-           :delete-task (recur (delete-task state ev-data))
-           :complete-task (recur (complete-task state ev-data))           
+           :delete-list (recur (<! (delete-list state ev-data)))           
+           :delete-task (recur (<! (delete-task state ev-data)))
+           :complete-task (recur (<! (complete-task state ev-data)))           
            (recur state)
           ))))))
 
 (defn setup-page []
-  (app-loop {}))
+  (go
+   (let [doc-id (.get cookies "todos-app1")
+         init-data (if doc-id
+                     (<! (doc-get doc-id))
+                     (<! (doc-create {:todo-lists {}})))]
+     (log (prn-str init-data))
+     (app-loop { :data init-data :focused-list (first (first (get init-data :todo-lists)))})
+     )))
 
 (setup-page)
